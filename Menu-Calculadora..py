@@ -119,4 +119,3 @@ def crear_ventana():
 
 vent = crear_ventana()
 vent.mainloop()
-# ok
