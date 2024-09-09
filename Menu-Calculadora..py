@@ -8,7 +8,7 @@ def crear_ventana():
 
     vent = Tk()
     vent.title("Mega Calculadora")
-    vent.geometry("1200x600")
+    vent.geometry("800x600")
     vent.configure(bg=bg_color)
 
     def realizar_operacion(op):
@@ -119,3 +119,4 @@ def crear_ventana():
 
 vent = crear_ventana()
 vent.mainloop()
+# Hola
