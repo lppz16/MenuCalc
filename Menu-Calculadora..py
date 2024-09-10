@@ -1,5 +1,5 @@
 from tkinter import Tk, Label, Button, Entry, Menu, Listbox, Scrollbar, END, ANCHOR, simpledialog
-import math
+import math, random
 
 def crear_ventana():
     bg_color = "#1DC4FF"
@@ -10,44 +10,95 @@ def crear_ventana():
     vent.title("Mega Calculadora")
     vent.geometry("800x600")
     vent.configure(bg=bg_color)
-
-    def realizar_operacion(op):
+    
+    def fnSuma():
         n1 = txt1.get()
         n2 = txt2.get()
         try:
-            if op == '+':
-                result = float(n1) + float(n2)
-                operation = f"{n1} + {n2} = {result}"
-            elif op == '-':
-                result = float(n1) - float(n2)
-                operation = f"{n1} - {n2} = {result}"
-            elif op == '*':
-                result = float(n1) * float(n2)
-                operation = f"{n1} * {n2} = {result}"
-            elif op == '/':
-                result = float(n1) / float(n2)
-                operation = f"{n1} / {n2} = {result}"
-            elif op == 'abs':
-                result = abs(float(n1))
-                operation = f"Abs({n1}) = {result}"
-            elif op == 'mcm':
-                n1, n2 = int(n1), int(n2)
-                result = abs(n1 * n2) // math.gcd(n1, n2)
-                operation = f"MCM({n1}, {n2}) = {result}"
-            elif op == 'mcd':
-                n1, n2 = int(n1), int(n2)
-                result = math.gcd(n1, n2)
-                operation = f"MCD({n1}, {n2}) = {result}"
-            else:
-                raise ValueError("Operación desconocida")
-
+            f = float(n1) + float(n2)
             txt3.delete(0, 'end')
-            txt3.insert(0, result)
-            append_to_history(operation)
+            txt3.insert(0, f)
+            append_to_history(f"{n1} + {n2} = {f}")
+        except ValueError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnResta():
+        n1 = txt1.get()
+        n2 = txt2.get()
+        try:
+            r = float(n1) - float(n2)
+            txt3.delete(0, 'end')
+            txt3.insert(0, r)
+            append_to_history(f"{n1} - {n2} = {r}")
+        except ValueError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnMult():
+        n1 = txt1.get()
+        n2 = txt2.get()
+        try:
+            a = float(n1) * float(n2)
+            txt3.delete(0, 'end')
+            txt3.insert(0, a)
+            append_to_history(f"{n1} * {n2} = {a}")
+        except ValueError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnDivi():
+        n1 = txt1.get()
+        n2 = txt2.get()
+        try:
+            n = float(n1) / float(n2)
+            txt3.delete(0, 'end')
+            txt3.insert(0, n)
+            append_to_history(f"{n1} / {n2} = {n}")
         except ValueError:
             txt3.delete(0, 'end')
             txt3.insert(0, "Error")
         except ZeroDivisionError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnValAbs():
+        n1 = txt1.get()
+        try:
+            k = float(n1)
+            valor_absoluto = abs(k)
+            txt3.delete(0, 'end')
+            txt3.insert(0, valor_absoluto)
+            append_to_history(f"Abs({n1}) = {valor_absoluto}")
+        except ValueError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnMCM():
+        n1 = txt1.get()
+        n2 = txt2.get()
+        try:
+            n1 = int(n1)
+            n2 = int(n2)
+            mcm = abs(n1 * n2) // math.gcd(n1, n2)
+            txt3.delete(0, 'end')
+            txt3.insert(0, mcm)
+            append_to_history(f"MCM({n1}, {n2}) = {mcm}")
+        except ValueError:
+            txt3.delete(0, 'end')
+            txt3.insert(0, "Error")
+
+    def fnMCD():
+        n1 = txt1.get()
+        n2 = txt2.get()
+        try:
+            n1 = int(n1)
+            n2 = int(n2)
+            mcd = math.gcd(n1, n2)
+            txt3.delete(0, 'end')
+            txt3.insert(0, mcd)
+            append_to_history(f"MCD({n1}, {n2}) = {mcd}")
+        except ValueError:
             txt3.delete(0, 'end')
             txt3.insert(0, "Error")
 
@@ -57,7 +108,7 @@ def crear_ventana():
     def delete_history():
         selected_index = history_listbox.curselection()
         if selected_index:
-            history_listbox.delete(selected_index)
+           history_listbox.delete(selected_index)
 
     def edit_history():
         selected_index = history_listbox.curselection()
@@ -67,6 +118,16 @@ def crear_ventana():
             if new_value:
                 history_listbox.delete(selected_index)
                 history_listbox.insert(selected_index, new_value)
+
+
+    def changeBG():
+        #vent.config(background = "#1DC4FF")
+        colors = ["black", "green", "cyan", "white", "yellow", "red", "purple", "pink", "orange", "gray"]
+        random_colors = random.choice(colors)
+        vent.config(background= random_colors)
+        lbl1.config(background= random_colors)
+        lbl2.config(background= random_colors)
+        lbl3.config(background= random_colors)
 
     def crear_menu(vent):
         barra_menu = Menu(vent)
@@ -78,13 +139,13 @@ def crear_ventana():
 
         menu_operacion = Menu(barra_menu, tearoff=0)
         barra_menu.add_cascade(label="Operación", menu=menu_operacion)
-        menu_operacion.add_command(label="Sumar", command=lambda: realizar_operacion('+'))
-        menu_operacion.add_command(label="Restar", command=lambda: realizar_operacion('-'))
-        menu_operacion.add_command(label="Multiplicación", command=lambda: realizar_operacion('*'))
-        menu_operacion.add_command(label="División", command=lambda: realizar_operacion('/'))
-        menu_operacion.add_command(label="Valor Absoluto", command=lambda: realizar_operacion('abs'))
-        menu_operacion.add_command(label="Mínimo Común Múltiplo", command=lambda: realizar_operacion('mcm'))
-        menu_operacion.add_command(label="Máximo Común Divisor", command=lambda: realizar_operacion('mcd'))
+        menu_operacion.add_command(label="Sumar", command=fnSuma)
+        menu_operacion.add_command(label="Restar", command=fnResta)
+        menu_operacion.add_command(label="Multiplicación", command=fnMult)
+        menu_operacion.add_command(label="División", command=fnDivi)
+        menu_operacion.add_command(label="Valor Absoluto", command=fnValAbs)
+        menu_operacion.add_command(label="Mínimo Común Múltiplo", command=fnMCM)
+        menu_operacion.add_command(label="Máximo Común Divisor", command=fnMCD)
 
     # Labels y Entries
     lbl1 = Label(vent, text="Número 1:", bg=bg_color, fg=fg_color, font=font)
@@ -108,9 +169,12 @@ def crear_ventana():
 
     # Botones para gestionar el historial
     delete_button = Button(vent, text="Eliminar", command=delete_history)
-    delete_button.place(x=400, y=500, width=100, height=30)
+    delete_button.place(x=400, y=350, width=100, height=30)
     edit_button = Button(vent, text="Editar", command=edit_history)
-    edit_button.place(x=520, y=500, width=100, height=30)
+    edit_button.place(x=520, y=350, width=100, height=30)
+
+    main_btn =Button(vent, text="'Click' para cambiar el color", command=changeBG)
+    main_btn.place(x=450, y=500)
 
     # Llamada a la función para crear el menú
     crear_menu(vent)
@@ -119,4 +183,3 @@ def crear_ventana():
 
 vent = crear_ventana()
 vent.mainloop()
-# Hola
